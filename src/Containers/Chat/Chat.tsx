@@ -2,7 +2,8 @@ import Container from '@mui/material/Container';
 import { GlobalStyles } from '@mui/material';
 import FormElement from '../../Components/FormElement/FormElement.tsx';
 import { IMessage } from '../../types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Messages from '../../Components/Messages/Messages.tsx';
 
 const Chat = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -14,34 +15,33 @@ const Chat = () => {
     if (!response.ok) {
       throw new Error('Network Error: ' + response.status);
     }
-    return response.json();
+    const data = await response.json();
+    return setMessages(data);
   };
 
-  const getAllMessages = async () => {
-    try {
-      const allMessages = await request(url);
-      console.log(allMessages);
-    } catch (error) {
-      alert(`Error ${error}`);
+  useEffect(() => {
+    if (messages.length === 0) {
+      void request(url);
     }
-  };
+  }, [messages]);
 
-  void getAllMessages();
 
   const addNewMessage = (newMessage: IMessage) => {
     setMessages((prevState) => [...prevState, newMessage]);
   };
 
-  console.log(messages);
-
-
   return (
     <>
-      <GlobalStyles styles={{ body: { backgroundColor: 'lightblue', margin: 0 } }} />
+      <GlobalStyles styles={{
+        body: {
+          background: 'url("https://img.freepik.com/free-vector/gradient-spheres-background_52683-76367.jpg?size=626&ext=jpg&ga=GA1.1.1425989515.1728691200&semt=ais_hybrid") no-repeat center center fixed',
+          backgroundSize: 'cover',
+        }
+      }} />
         <Container maxWidth="sm" sx={{mt: 4}}>
           <div>
             <FormElement addNewMessage={addNewMessage}/>
-            здесь будут все данные
+            <Messages messages={messages}/>
           </div>
         </Container>
     </>
@@ -49,3 +49,5 @@ const Chat = () => {
 };
 
 export default Chat;
+
+
