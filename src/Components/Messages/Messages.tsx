@@ -7,18 +7,18 @@ interface IMessagesProps {
   messages: IMessage[];
 }
 
-const Messages: React.FC<IMessagesProps> = ({messages}) => {
-  console.log('[Messages] render');
+const Messages: React.FC<IMessagesProps> = ({ messages }) => {
+  console.log("[Messages] render");
 
   useEffect(() => {
-    console.log('[Messages] mounted!');
+    console.log("[Messages] mounted!");
   }, []);
 
-  return (
-    messages.map((message) => (
-      <Message key={message._id} message={message}/>
-    ))
-  );
+  const rotateMessages = messages.reverse();
+
+  return rotateMessages.map((message) => (
+    <Message key={message._id} message={message} />
+  ));
 };
 
 export default Messages;

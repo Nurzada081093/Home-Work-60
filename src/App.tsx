@@ -3,9 +3,9 @@ import Chat from './Containers/Chat/Chat.tsx';
 const App = () => {
   return (
     <>
-      <Chat/>
+      <Chat />
     </>
-  )
+  );
 };
 
 export default App;

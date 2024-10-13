@@ -3,21 +3,23 @@ import Input from '@mui/joy/Input';
 import Textarea from '@mui/joy/Textarea';
 import Stack from '@mui/joy/Stack';
 import { Box } from '@mui/joy';
-import { useState } from 'react';
-import { IMessage, INewMessage } from '../../types';
 import * as React from 'react';
+import { useState } from 'react';
+import { INewMessage } from '../../types';
 
 interface IProps {
-  addNewMessage: (newMessage: IMessage) => void;
+  addNewMessage: (newMessage: INewMessage) => void;
 }
 
-const FormElement: React.FC<IProps> = ({addNewMessage}) => {
+const FormElement: React.FC<IProps> = ({ addNewMessage }) => {
   const [newMessage, setNewMessage] = useState<INewMessage>({
     message: "",
-    author: ""
+    author: "",
   });
 
-  const getNewMessage = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const getNewMessage = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setNewMessage((prevState) => {
       return {
         ...prevState,
@@ -29,22 +31,28 @@ const FormElement: React.FC<IProps> = ({addNewMessage}) => {
   const createNewMessage = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (newMessage.author.trim().length === 0 && newMessage.message.trim().length === 0) {
-      alert('Fill in all the fields!');
+    if (
+      newMessage.author.trim().length === 0 &&
+      newMessage.message.trim().length === 0
+    ) {
+      alert("Fill in all the fields!");
     } else {
       addNewMessage({
-        datetime: String(new Date().toISOString()),
-        _id: String(new Date()),
         ...newMessage,
       });
 
-      newMessage.author = '';
-      newMessage.message = '';
+      setNewMessage({ author: "", message: "" });
     }
   };
 
   return (
-    <Box sx={{border: 1, p: '19px'}}>
+    <Box
+      sx={{
+        borderRadius: 10,
+        p: "19px",
+        backgroundColor: "rgba(157,165,163,0.68)",
+      }}
+    >
       <form onSubmit={createNewMessage}>
         <Stack spacing={1}>
           <Input
@@ -65,7 +73,7 @@ const FormElement: React.FC<IProps> = ({addNewMessage}) => {
             placeholder="Enter your message..."
             minRows={3}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Send</Button>
         </Stack>
       </form>
     </Box>
