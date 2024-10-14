@@ -1,9 +1,9 @@
-import Container from "@mui/material/Container";
-import { GlobalStyles } from "@mui/material";
-import FormElement from "../../Components/FormElement/FormElement.tsx";
-import { IMessage, INewMessage } from "../../types";
-import { useEffect, useState } from "react";
-import Messages from "../../Components/Messages/Messages.tsx";
+import Container from '@mui/material/Container';
+import { GlobalStyles } from '@mui/material';
+import FormElement from '../../Components/FormElement/FormElement.tsx';
+import { IMessage, INewMessage } from '../../types';
+import { useEffect, useState } from 'react';
+import Messages from '../../Components/Messages/Messages.tsx';
 
 const Chat = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -19,44 +19,43 @@ const Chat = () => {
     return await response.json();
   };
 
-  const getAllMessages = async () => {
-    try {
-      const data = await request(url);
-      if (data.length > 0) {
-        setMessages(data);
-        setLastDatetime(data[data.length - 1].datetime);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  const fetchNewMessages = async () => {
-    try {
-      const data = await request(`${url}?datetime=${lastDatetime}`);
-      if (data.length > 0) {
-        const wholeMessages = [...messages, ...data];
-        wholeMessages.sort(
-          (a, b) =>
-            new Date(a.datetime).getTime() - new Date(b.datetime).getTime(),
-        );
-
-        setMessages(wholeMessages);
-        setLastDatetime(data[data.length - 1].datetime);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
-
   useEffect(() => {
+    const getAllMessages = async () => {
+      try {
+        const data = await request(url);
+        if (data.length > 0) {
+          setMessages(data);
+          setLastDatetime(data[data.length - 1].datetime);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     void getAllMessages();
   }, []);
 
   useEffect(() => {
+    const fetchNewMessages = async () => {
+      try {
+        const data = await request(`${url}?datetime=${lastDatetime}`);
+        if (data.length > 0) {
+          const wholeMessages = [...messages, ...data];
+          wholeMessages.sort(
+            (a, b) =>
+              new Date(a.datetime).getTime() - new Date(b.datetime).getTime(),
+          );
+          setMessages(wholeMessages);
+          setLastDatetime(data[data.length - 1].datetime);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    };
+
     const interval = setInterval(fetchNewMessages, 3000);
     return () => clearInterval(interval);
-  }, [lastDatetime]);
+  }, [lastDatetime, messages]);
 
   const addNewMessage = (newMessage: INewMessage) => {
     const data = new URLSearchParams();
